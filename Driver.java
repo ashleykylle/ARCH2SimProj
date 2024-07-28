@@ -13,12 +13,12 @@ public class Driver {
         String binary2 = scanner.nextLine();
 
         System.out.print("Enter rounding mode (N for nearest, Z for toward zero, P for positive infinity, F for negative infinity): ");
-        char roundingMode = scanner.next().charAt(0);
+        String roundingMode = scanner.nextLine();
 
-        System.out.print("Enter the number of digits supported: ");
-        int digitsSupported = scanner.nextInt();
+        // System.out.print("Enter the number of digits supported: ");
+        int digitsSupported = 7; //please change this when GRS is implemented to scanner.nextInt();
 
-        Binary32Calculator calculator = new Binary32Calculator(binary1, binary2, roundingMode, digitsSupported);
+        Binary32Calculator calculator = new Binary32Calculator(binary1, binary2, roundingMode);
 
         String output = calculator.performAddition();
 
