@@ -91,7 +91,6 @@ public class Binary32Calculator {
         int exponent = binary.length() - 1;
         String mantissa = binary.charAt(0) + "." + binary.substring(1);
 
-        // Ensure mantissa has at least 3 decimal places
         while (mantissa.length() < 5) {
             mantissa += "0";
         }
