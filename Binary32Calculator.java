@@ -160,7 +160,11 @@ public class Binary32Calculator {
             normalized += "000";
         }
 
-        return normalized.charAt(0) + "." + normalized.substring(1) + " x 2^" + exponent;
+        String mantissa = normalized.charAt(0) + "." + normalized.substring(1);
+
+        mantissa = removeTrailZeroes(mantissa);
+
+        return mantissa + " x 2^" + exponent;
     }
 
 
@@ -196,29 +200,21 @@ public class Binary32Calculator {
         return Math.round(value);
     }
 
-private String normalizeToExponentZero(String scientificNotation) {
-    int exponentIndex = scientificNotation.indexOf(" x 2^");
-    String mantissa = scientificNotation.substring(0, exponentIndex);
-    int exponent = Integer.parseInt(scientificNotation.substring(exponentIndex + 5));
-
-    // Shift the mantissa and adjust the exponent
-    while (exponent != 0) {
-        if (exponent > 0) {
-            mantissa = mantissa.replace(".", "");
-            mantissa = mantissa.charAt(0) + "." + mantissa.substring(1);
-            exponent--;
-        } else {
-            if (mantissa.charAt(0) != '0') {
-                mantissa = "0." + mantissa.replace(".", "");
-            } else {
-                mantissa = mantissa.charAt(0) + "." + mantissa.substring(1);
-            }
-            exponent++;
+    private String removeTrailZeroes(String binary){
+        if(binary.length() <= 5){
+            return binary;
         }
+
+        int end = binary.length() - 1;
+        for(int i = end; i > 0; i--){
+            if(binary.charAt(i) == '0'){
+                binary = binary.substring(0, i);
+            }else{
+                return binary;
+            }
+        }
+
+        return binary;
     }
-
-    return mantissa + " x 2^0";
-}
-
 
 }

@@ -12,7 +12,7 @@ public class Driver {
         System.out.print("Enter the second binary number: ");
         String binary2 = scanner.nextLine();
 
-        System.out.print("Enter rounding mode (N for nearest, Z for toward zero, P for positive infinity, F for negative infinity): ");
+        System.out.print("Enter rounding mode (GRS for GRS, R for Rounding): ");
         String roundingMode = scanner.nextLine();
 
         // System.out.print("Enter the number of digits supported: ");
