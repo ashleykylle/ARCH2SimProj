@@ -8,27 +8,35 @@ public class Driver {
 
         System.out.print("Enter the first binary number: ");
         String binary1 = scanner.nextLine();
-
+        
         System.out.print("Enter the second binary number: ");
         String binary2 = scanner.nextLine();
+        
+        System.out.print("Enter the number of digits supported: ");
+        int digitsSupported = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Enter rounding mode (GRS for GRS, R for Rounding): ");
-        String roundingMode = scanner.nextLine();
+        System.out.println("Choice of Rounding");
+        System.out.println("[R] Rounding");
+        System.out.println("[G] GRS");
 
-        // System.out.print("Enter the number of digits supported: ");
-        int digitsSupported = 7; //please change this when GRS is implemented to scanner.nextInt();
+        System.out.print("Enter rounding mode (R for Rounding, G for GRS Rounding): ");
+        String roundingMode = scanner.nextLine().trim();
 
-        Binary32Calculator calculator = new Binary32Calculator(binary1, binary2, roundingMode);
+        if (!roundingMode.equalsIgnoreCase("R") && !roundingMode.equalsIgnoreCase("G")) {
+            System.out.println("Invalid input. Please enter 'R' or 'G'.");
+            return;
+        }
 
-        String output = calculator.performAddition();
+        Binary32Calculator calculator = new Binary32Calculator(binary1, binary2, roundingMode, digitsSupported);
+        String result = calculator.performAddition();
 
-        System.out.println(output);
+        System.out.println(result);
 
-        System.out.print("Do you want to save the output to a text file? (y/n): ");
+        System.out.print("Do you want to save the results to a text file? (y/n): ");
         char saveToFile = scanner.next().charAt(0);
         if (saveToFile == 'y') {
             try (FileWriter writer = new FileWriter("output.txt")) {
-                writer.write(output);
+                writer.write(result);
                 System.out.println("Output saved to output.txt");
             } catch (IOException e) {
                 System.out.println("An error occurred while writing to the file.");
@@ -37,5 +45,6 @@ public class Driver {
         }
 
         scanner.close();
+
     }
 }
