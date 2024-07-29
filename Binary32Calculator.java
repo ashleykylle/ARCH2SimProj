@@ -201,13 +201,9 @@ public class Binary32Calculator {
     }
 
     private String removeTrailZeroes(String binary){
-        if(binary.length() <= 5){
-            return binary;
-        }
-
         int end = binary.length() - 1;
         for(int i = end; i > 0; i--){
-            if(binary.charAt(i) == '0'){
+            if(binary.charAt(i) == '0' && binary.length() > 5){
                 binary = binary.substring(0, i);
             }else{
                 return binary;
