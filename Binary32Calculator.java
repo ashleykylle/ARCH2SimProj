@@ -2,11 +2,13 @@ public class Binary32Calculator {
     private String binary1;
     private String binary2;
     private String roundingMode;
+    private int digitsSupported;
 
-    public Binary32Calculator(String binary1, String binary2, String roundingMode) {
+    public Binary32Calculator(String binary1, String binary2, String roundingMode, int digitsSupported) {
         this.binary1 = binary1;
         this.binary2 = binary2;
         this.roundingMode = roundingMode;
+        this.digitsSupported = digitsSupported;
     }
 
     public String performAddition() {
@@ -15,9 +17,13 @@ public class Binary32Calculator {
 
         float number1 = binaryToFloat(binary1);
         float number2 = binaryToFloat(binary2);
-        
+
         String ieee1 = toIEEE754BinaryString(number1);
         String ieee2 = toIEEE754BinaryString(number2);
+
+        // Remove trailing zeroes from IEEE-754 representations
+        ieee1 = removeTrailingZeroes(ieee1);
+        ieee2 = removeTrailingZeroes(ieee2);
 
         String scientific1 = toScientificNotation(binary1);
         String scientific2 = toScientificNotation(binary2);
@@ -51,53 +57,128 @@ public class Binary32Calculator {
         output.append("   Number 1: ").append(normalized1).append("\n");
         output.append("   Number 2: ").append(normalized2).append("\n");
 
+        if (roundingMode.equalsIgnoreCase("G")) {
+            // Perform GRS rounding
+            Operand operand1 = new Operand("0", exponent1, mantissa1); // Assume sign is "0"
+            Operand operand2 = new Operand("0", exponent2, mantissa2);
+
+            operand1 = useGRSRounding(operand1, digitsSupported);
+            operand2 = useGRSRounding(operand2, digitsSupported);
+
+            String rounded1 = operand1.magnitude + " x 2^" + operand1.exponent;
+            String rounded2 = operand2.magnitude + " x 2^" + operand2.exponent;
+
+            output.append("3. Normalized exponents with GRS rounding:\n");
+            output.append("   Number 1 with GRS Rounding: ").append(rounded1).append("\n");
+            output.append("   Number 2 with GRS Rounding: ").append(rounded2).append("\n");
+
+            number1 = binaryToFloat(operand1.magnitude);
+            number2 = binaryToFloat(operand2.magnitude);
+        }
+
+        // Perform the addition operation
         float sum = number1 + number2;
         String scientificSum = toScientificNotation(floatToStandardBinary(sum));
 
-        output.append("3. Addition operation:\n");
+        // Limit the binary result to the user-specified number of digits, excluding the decimal point
+        String limitedBinarySum = limitBinaryDigits(scientificSum, digitsSupported);
+
+        // Include the normalized exponent in the binary answer
+        String normalizedExponent = " x 2^" + getExponentFromScientific(scientificSum);
+
+        output.append("4. Addition operation:\n");
         output.append("   Sum (Normalized form): ").append(scientificSum).append("\n");
 
-        output.append("4. Rounding:\n");
-        sum = roundFloat(sum, roundingMode);
-        output.append("   Rounded Sum: ").append(sum).append("\n\n");
+        output.append("5. Binary Answer:\n");
+        output.append("   ").append(limitedBinarySum).append(normalizedExponent).append("\n");
 
-        output.append("Binary Answer: ").append(scientificSum).append("\n");
-        output.append("Decimal Answer: ").append(sum).append("\n");
+        output.append("6. Decimal Answer:\n");
+        output.append("   ").append(sum).append("\n");
 
         return output.toString();
     }
 
-    public String floatToStandardBinary(float number) {
-    // Handle the integer part
-    int integerPart = (int) number;
-    String integerBinary = Integer.toBinaryString(integerPart);
-    
-    // Handle the fractional part
-    float fractionalPart = number - integerPart;
-    StringBuilder fractionalBinary = new StringBuilder();
-    
-    while (fractionalPart > 0) {
-        fractionalPart *= 2;
-        if (fractionalPart >= 1) {
-            fractionalBinary.append("1");
-            fractionalPart -= 1;
+    private String removeTrailingZeroes(String binary) {
+        int endIndex = binary.length() - 1;
+        while (endIndex >= 0 && binary.charAt(endIndex) == '0') {
+            endIndex--;
+        }
+        return binary.substring(0, endIndex + 1);
+    }
+
+    private String limitBinaryDigits(String binary, int limit) {
+        int count = 0;
+        StringBuilder result = new StringBuilder();
+        for (char c : binary.toCharArray()) {
+            if (c != '.') {
+                count++;
+            }
+            result.append(c);
+            if (count == limit) {
+                break;
+            }
+        }
+        return result.toString();
+    }
+
+
+    public Operand useGRSRounding(Operand operand, int digitsSupported) {
+        String[] opPartition = operand.magnitude.split("\\.");
+        String mantissa = opPartition[1];
+
+        digitsSupported = digitsSupported - 1; // remove LHS of binary point in counting
+
+        StringBuilder binary = new StringBuilder();
+        String stickyBit = "0";
+
+        if (mantissa.length() < digitsSupported + 3) {
+            binary.append(mantissa).append("0".repeat(digitsSupported + 3 - mantissa.length()));
         } else {
-            fractionalBinary.append("0");
+            for (int i = 0; i < mantissa.length(); i++) {
+                if (i < digitsSupported + 2) {
+                    binary.append(mantissa.charAt(i));
+                } else {
+                    if (mantissa.charAt(i) == '1') {
+                        stickyBit = "1";
+                        break;
+                    }
+                }
+            }
+            binary.append(stickyBit);
         }
 
-        // Limit the length of the fractional part to prevent infinite loops for non-terminating binary fractions
-        if (fractionalBinary.length() > 32) {
-            break;
-        }
+        operand.magnitude = opPartition[0] + "." + binary.toString();
+
+        return operand;
     }
 
-    // Combine the integer and fractional parts
-    if (fractionalBinary.length() > 0) {
-        return integerBinary + "." + fractionalBinary.toString();
-    } else {
-        return integerBinary;
+    public String floatToStandardBinary(float number) {
+        int integerPart = (int) number;
+        String integerBinary = Integer.toBinaryString(integerPart);
+        
+        float fractionalPart = number - integerPart;
+        StringBuilder fractionalBinary = new StringBuilder();
+        
+        while (fractionalPart > 0) {
+            fractionalPart *= 2;
+            if (fractionalPart >= 1) {
+                fractionalBinary.append("1");
+                fractionalPart -= 1;
+            } else {
+                fractionalBinary.append("0");
+            }
+
+            if (fractionalBinary.length() > 32) {
+                break;
+            }
+        }
+
+        if (fractionalBinary.length() > 0) {
+            return integerBinary + "." + fractionalBinary.toString();
+        } else {
+            return integerBinary;
+        }
     }
-}
 
     public String floatToBinary(float number) {
         int bits = Float.floatToIntBits(number);
@@ -140,33 +221,24 @@ public class Binary32Calculator {
         int exponent;
 
         if (index == -1) {
-            // Handle non-fractional binaries
-            index = binary.length(); // Treat as if the decimal point is at the end
+            index = binary.length();
             normalized = binary;
             exponent = index - 1;
         } else {
-            // Handle fractional binaries
             normalized = binary.replace(".", "");
             exponent = index - 1;
         }
 
-        // Normalize the mantissa
         int firstOneIndex = normalized.indexOf('1');
         normalized = normalized.substring(firstOneIndex);
         exponent -= firstOneIndex;
 
-        // If the mantissa is "1", pad with three zeros
         if (normalized.equals("1")) {
             normalized += "000";
         }
 
-        String mantissa = normalized.charAt(0) + "." + normalized.substring(1);
-
-        mantissa = removeTrailZeroes(mantissa);
-
-        return mantissa + " x 2^" + exponent;
+        return normalized.charAt(0) + "." + normalized.substring(1) + " x 2^" + exponent;
     }
-
 
     private int getExponentFromScientific(String scientific) {
         String[] parts = scientific.split(" x 2\\^");
@@ -185,32 +257,12 @@ public class Binary32Calculator {
         }
         StringBuilder sb = new StringBuilder(binary.replace(".", ""));
         for (int i = 0; i < shift; i++) {
-            sb.insert(0, '0'); // Insert '0' at the beginning
+            sb.insert(0, '0');
         }
         if (index + shift == 0) {
-            sb.insert(0, '0'); // Insert '0' at the beginning if decimal point is at the start
+            sb.insert(0, '0');
         }
-        sb.insert(index, '.'); // Insert new decimal point at the correct position
+        sb.insert(index, '.');
         return sb.toString();
     }
-
-    private float roundFloat(float value, String mode) {
-        // Implement rounding based on the mode
-        // For simplicity, we'll use Math.round for now
-        return Math.round(value);
-    }
-
-    private String removeTrailZeroes(String binary){
-        int end = binary.length() - 1;
-        for(int i = end; i > 0; i--){
-            if(binary.charAt(i) == '0' && binary.length() > 5){
-                binary = binary.substring(0, i);
-            }else{
-                return binary;
-            }
-        }
-
-        return binary;
-    }
-
 }
