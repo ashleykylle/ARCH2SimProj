@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary32 Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Binary32 Calculator</h1>
+    <form id="calculator-form">
+      <label for="binary1">First Binary Number:</label>
+      <input type="text" id="binary1" name="binary1" required class="input-binary"><br>
+
+      <label for="binary2">Second Binary Number:</label>
+      <input type="text" id="binary2" name="binary2" required class="input-binary"><br>
+
+      <label for="roundingMode">Rounding Mode:</label>
+      <select id="roundingMode" name="roundingMode" required>
+        <option value="R">Rounding</option>
+        <option value="G">GRS Rounding</option>
+      </select><br>
+
+      <div id="digits-supported-container" style="display: none;">
+        <label for="digitsSupported">Number of Digits Supported:</label>
+        <input type="number" id="digitsSupported" name="digitsSupported" value="32"><br>
+      </div>
+
+      <button type="submit" id="calculate-btn">Calculate</button>
+    </form>
+    <pre id="result"></pre>
+    <button id="download-btn">Download output as text file</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

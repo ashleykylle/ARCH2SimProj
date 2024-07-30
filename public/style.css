@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.input-binary, #digitsSupported {
+    width: 95%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+pre {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
