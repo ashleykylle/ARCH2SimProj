@@ -19,7 +19,7 @@ public class Driver {
         System.out.print("Enter rounding mode (R for Rounding, G for GRS Rounding): ");
         String roundingMode = scanner.nextLine().trim();
 
-        int digitsSupported = 7;
+        int digitsSupported = 8;
         if(roundingMode.equalsIgnoreCase("G")){
             System.out.print("Enter the number of digits supported: ");
             digitsSupported = Integer.parseInt(scanner.nextLine());

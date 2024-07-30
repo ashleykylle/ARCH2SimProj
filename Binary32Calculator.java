@@ -15,10 +15,18 @@ public class Binary32Calculator {
         StringBuilder output = new StringBuilder();
         output.append("Step-by-step operation:\n");
 
+        float number1 = binaryToFloat(binary1);
+        float number2 = binaryToFloat(binary2);
+
+        String ieee1 = toIEEE754BinaryString(number1);
+        String ieee2 = toIEEE754BinaryString(number2);
+
         String scientific1 = toScientificNotation(binary1);
         String scientific2 = toScientificNotation(binary2);
 
         output.append("1. Initial normalization:\n");
+        output.append("   Number 1 (IEEE-754): ").append(ieee1).append("\n");
+        output.append("   Number 2 (IEEE-754): ").append(ieee2).append("\n");
         output.append("   Number 1 (Normalized form): ").append(scientific1).append("\n");
         output.append("   Number 2 (Normalized form): ").append(scientific2).append("\n");
 
@@ -108,10 +116,12 @@ public class Binary32Calculator {
 
         // Limit the binary result to the user-specified number of digits, excluding the decimal point
         String limitedBinarySum = limitBinaryDigits(scientificSum, digitsSupported);
-
+        System.out.println(scientificSum);
+        System.out.println(limitedBinarySum);
+        
         // Include the normalized exponent in the binary answer
         String normalizedExponent = " x 2^" + getExponentFromScientific(scientificSum);
-
+        System.out.println(normalizedExponent);
         output.append("4. Addition operation:\n");
         output.append("   Sum (Normalized form): ").append(scientificSum).append("\n");
 
@@ -230,6 +240,9 @@ public class Binary32Calculator {
         StringBuilder result = new StringBuilder();
         for (char c : binary.toCharArray()) {
             if (c != '.') {
+                if(c == ' '){
+                    break;
+                }
                 count++;
             }
             result.append(c);
