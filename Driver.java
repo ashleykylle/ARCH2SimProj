@@ -11,9 +11,6 @@ public class Driver {
         
         System.out.print("Enter the second binary number: ");
         String binary2 = scanner.nextLine();
-        
-        System.out.print("Enter the number of digits supported: ");
-        int digitsSupported = Integer.parseInt(scanner.nextLine());
 
         System.out.println("Choice of Rounding");
         System.out.println("[R] Rounding");
@@ -21,6 +18,12 @@ public class Driver {
 
         System.out.print("Enter rounding mode (R for Rounding, G for GRS Rounding): ");
         String roundingMode = scanner.nextLine().trim();
+
+        int digitsSupported = 7;
+        if(roundingMode.equalsIgnoreCase("G")){
+            System.out.print("Enter the number of digits supported: ");
+            digitsSupported = Integer.parseInt(scanner.nextLine());
+        }
 
         if (!roundingMode.equalsIgnoreCase("R") && !roundingMode.equalsIgnoreCase("G")) {
             System.out.println("Invalid input. Please enter 'R' or 'G'.");

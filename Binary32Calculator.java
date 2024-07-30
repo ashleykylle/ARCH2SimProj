@@ -21,10 +21,6 @@ public class Binary32Calculator {
         String ieee1 = toIEEE754BinaryString(number1);
         String ieee2 = toIEEE754BinaryString(number2);
 
-        // Remove trailing zeroes from IEEE-754 representations
-        ieee1 = removeTrailingZeroes(ieee1);
-        ieee2 = removeTrailingZeroes(ieee2);
-
         String scientific1 = toScientificNotation(binary1);
         String scientific2 = toScientificNotation(binary2);
 
@@ -78,6 +74,9 @@ public class Binary32Calculator {
 
         // Perform the addition operation
         float sum = number1 + number2;
+        if(roundingMode.equalsIgnoreCase("R")){
+            sum = Math.round(sum);
+        }
         String scientificSum = toScientificNotation(floatToStandardBinary(sum));
 
         // Limit the binary result to the user-specified number of digits, excluding the decimal point
@@ -100,7 +99,7 @@ public class Binary32Calculator {
 
     private String removeTrailingZeroes(String binary) {
         int endIndex = binary.length() - 1;
-        while (endIndex >= 0 && binary.charAt(endIndex) == '0') {
+        while (endIndex > 4 && binary.charAt(endIndex) == '0') {
             endIndex--;
         }
         return binary.substring(0, endIndex + 1);
@@ -120,7 +119,6 @@ public class Binary32Calculator {
         }
         return result.toString();
     }
-
 
     public Operand useGRSRounding(Operand operand, int digitsSupported) {
         String[] opPartition = operand.magnitude.split("\\.");
@@ -237,7 +235,11 @@ public class Binary32Calculator {
             normalized += "000";
         }
 
-        return normalized.charAt(0) + "." + normalized.substring(1) + " x 2^" + exponent;
+        String done = normalized.charAt(0) + "." + normalized.substring(1);
+
+        done = removeTrailingZeroes(done);
+
+        return done + " x 2^" + exponent;
     }
 
     private int getExponentFromScientific(String scientific) {
