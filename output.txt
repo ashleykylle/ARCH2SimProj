@@ -1,18 +1,15 @@
 Step-by-step operation:
 1. Initial normalization:
-   Number 1 (IEEE-754): 00111111110101010000000000000000
-   Number 2 (IEEE-754): 00111111110101010100000000000000
-   Number 1 (Normalized form): 1.1010101 x 2^0
-   Number 2 (Normalized form): 1.101010101 x 2^0
+   Number 1 (IEEE-754): 01000001010000000000000000000000
+   Number 2 (IEEE-754): 01000001001000000000000000000000
+   Number 1 (Normalized form): 1.100 x 2^3
+   Number 2 (Normalized form): 1.010 x 2^3
 2. Normalize exponents:
-   Number 1: 1.1010101 x 2^0
-   Number 2: 1.101010101 x 2^0
-3. Normalized exponents with GRS rounding:
-   Number 1 with GRS Rounding: 1.1010101000000000000000000000000000 x 2^0
-   Number 2 with GRS Rounding: 1.1010101010000000000000000000000000 x 2^0
+   Number 1: 1.100 x 2^3
+   Number 2: 1.010 x 2^3
 4. Addition operation:
-   Sum: 11.0101010010000000000000000000000000 x 2^0
-5. Normalized Sum:
-   Normalized Sum: 1.10101010010000000000000000000000 x 2^1
+   Sum (Normalized form): 1.011 x 2^4
+5. Binary Answer:
+   1.011 x 2^4
 6. Decimal Answer:
-   Decimal Sum: 3.330078125
+   22.0
