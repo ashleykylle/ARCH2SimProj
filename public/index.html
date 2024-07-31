@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Binary32 Calculator</title>
+  <title>CSARCH2 G1 Binary-32 Floating Point Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Binary32 Calculator</h1>
+    <h1>Binary-32 Floating Point Calculator</h1>
     <form id="calculator-form">
       <label for="binary1">First Binary Number:</label>
       <input type="text" id="binary1" name="binary1" required class="input-binary"><br>
@@ -24,13 +24,13 @@
 
       <div id="digits-supported-container" style="display: none;">
         <label for="digitsSupported">Number of Digits Supported:</label>
-        <input type="number" id="digitsSupported" name="digitsSupported" value="32"><br>
+        <input type="number" id="digitsSupported" name="digitsSupported" value="32" required><br>
       </div>
 
-      <button type="submit" id="calculate-btn">Calculate</button>
+      <button type="submit">Calculate</button>
     </form>
     <pre id="result"></pre>
-    <button id="download-btn">Download output as text file</button>
+    <button id="download-btn">Download Result as Text File</button>
   </div>
   <script src="script.js"></script>
 </body>
