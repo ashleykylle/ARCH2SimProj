@@ -29,15 +29,13 @@ app.post('/calculate', (req, res) => {
   }
 });
 
+// removes the redundant rows in the beginning of R rounding mode output
 function filterRedundantLines(output, roundingMode) {
-  // Split the output into lines
   const lines = output.split('\n');
 
   if (roundingMode === 'R') {
-    // If rounding mode is 'R', remove the first three rows
     return lines.slice(3).join('\n');
   } else {
-    // Otherwise, return the output as is
     return output;
   }
 }
