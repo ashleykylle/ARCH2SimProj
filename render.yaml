@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: Binary32 Calculator
+    name: CSARCH2 G1 Binary32 Calculator
     env: node
     plan: free
     buildCommand: |
