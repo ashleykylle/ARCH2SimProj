@@ -9,7 +9,7 @@ A machine project submitted in partial fulfillment of the group's CSARCH2 course
 5. [OPTIONAL DOWNLOAD] The result can be downloaded as a text file
 
 # Documentation and Analysis Writeup
-The group's writeup with screenshots and test cases can be found here:
+The group's writeup with screenshots and test cases can be found here: https://drive.google.com/file/d/1aVkTzqS317_ueHqhopda4HyuG08w5sy0/view?usp=sharing
 
 # Group Members
 - Adrada, Jasper John
