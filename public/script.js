@@ -6,7 +6,7 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
   const roundingMode = document.getElementById('roundingMode').value;
   let digitsSupported = 32; // defaults to 32
 
-  if (roundingMode == 'G') {
+  if (roundingMode === 'G') {
     digitsSupported = document.getElementById('digitsSupported').value;
   }
 
@@ -38,4 +38,9 @@ document.getElementById('roundingMode').addEventListener('change', function() {
   const digitsSupportedContainer = document.getElementById('digits-supported-container');
 
   digitsSupportedContainer.style.display = (roundingMode === 'G') ? 'block' : 'none';
+});
+
+// handle download button click
+document.getElementById('download-btn').addEventListener('click', function() {
+  window.location.href = '/download';
 });

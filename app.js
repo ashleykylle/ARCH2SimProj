@@ -1,4 +1,3 @@
-// required dependencies
 const express = require('express');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -13,7 +12,7 @@ app.post('/calculate', (req, res) => {
   const { binary1, binary2, roundingMode, digitsSupported } = req.body;
 
   let command = `java -cp bin src.Driver ${binary1} ${binary2} ${roundingMode}`;
-  if (roundingMode == 'G') {
+  if (roundingMode === 'G') {
     command += ` ${digitsSupported}`;
   }
 
@@ -22,6 +21,11 @@ app.post('/calculate', (req, res) => {
 
     const filteredOutput = filterRedundantLines(output, roundingMode);
     
+    // write filtered output to a file
+    const fs = require('fs');
+    const filePath = path.join(__dirname, 'output.txt');
+    fs.writeFileSync(filePath, filteredOutput);
+
     res.send(filteredOutput);
   } catch (error) {
     console.error('Error executing command:', error);
@@ -29,7 +33,17 @@ app.post('/calculate', (req, res) => {
   }
 });
 
-// removes the redundant rows in the beginning of R rounding mode output
+// output file
+app.get('/download', (req, res) => {
+  const filePath = path.join(__dirname, 'output.txt');
+  res.download(filePath, 'result.txt', (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(500).send('Error downloading file');
+    }
+  });
+});
+
 function filterRedundantLines(output, roundingMode) {
   const lines = output.split('\n');
 
@@ -39,7 +53,6 @@ function filterRedundantLines(output, roundingMode) {
     return output;
   }
 }
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
