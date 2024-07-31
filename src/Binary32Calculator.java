@@ -180,31 +180,44 @@ public class Binary32Calculator {
     public static String addBinary(String binary1, String binary2) {
         String[] parts1 = binary1.split("\\.");
         String[] parts2 = binary2.split("\\.");
-
+    
+        while (parts1[1].length() < parts2[1].length()) {
+            parts1[1] += "0";
+        }
+        while (parts2[1].length() < parts1[1].length()) {
+            parts2[1] += "0";
+        }
+    
         int maxFractionLength = Math.max(parts1[1].length(), parts2[1].length());
         parts1[1] = padRight(parts1[1], maxFractionLength);
         parts2[1] = padRight(parts2[1], maxFractionLength);
-
+    
         int maxIntegerLength = Math.max(parts1[0].length(), parts2[0].length());
         parts1[0] = padLeft(parts1[0], maxIntegerLength);
         parts2[0] = padLeft(parts2[0], maxIntegerLength);
-
+    
         String fractionalSum = addBinaryStrings(parts1[1], parts2[1]);
-
+    
         String integerSum = addBinaryStrings(parts1[0], parts2[0]);
-
+    
         if (fractionalSum.length() > maxFractionLength) {
             integerSum = addBinaryStrings(integerSum, "1");
             fractionalSum = fractionalSum.substring(1);
         }
-
+    
         return integerSum + "." + fractionalSum;
     }
 
     public static String addBinaryStrings(String binary1, String binary2) {
+        if (binary1.length() > binary2.length()) {
+            binary2 = padLeft(binary2, binary1.length());
+        } else if (binary2.length() > binary1.length()) {
+            binary1 = padLeft(binary1, binary2.length());
+        }
+        
         StringBuilder result = new StringBuilder();
         int carry = 0;
-
+    
         for (int i = binary1.length() - 1; i >= 0; i--) {
             int bit1 = binary1.charAt(i) - '0';
             int bit2 = binary2.charAt(i) - '0';
@@ -212,11 +225,11 @@ public class Binary32Calculator {
             result.append(sum % 2);
             carry = sum / 2;
         }
-
+    
         if (carry != 0) {
             result.append(carry);
         }
-
+    
         return result.reverse().toString();
     }
 
