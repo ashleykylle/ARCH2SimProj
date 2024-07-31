@@ -1,15 +1,15 @@
 Step-by-step operation:
 1. Initial normalization:
-   Number 1 (IEEE-754): 01000001010000000000000000000000
-   Number 2 (IEEE-754): 01000001001000000000000000000000
-   Number 1 (Normalized form): 1.100 x 2^3
-   Number 2 (Normalized form): 1.010 x 2^3
+   Number 1 (IEEE-754): 01000000011000000000000000000000
+   Number 2 (IEEE-754): 00111111110100000000000000000000
+   Number 1 (Normalized form): 1.110 x 2^1
+   Number 2 (Normalized form): 1.101 x 2^0
 2. Normalize exponents:
-   Number 1: 1.100 x 2^3
-   Number 2: 1.010 x 2^3
+   Number 1: 1.110 x 2^1
+   Number 2: 0.1101 x 2^1
 4. Addition operation:
-   Sum (Normalized form): 1.011 x 2^4
+   Sum (Normalized form): 1.01 x 2^2
 5. Binary Answer:
-   1.011 x 2^4
+   1.01 x 2^2
 6. Decimal Answer:
-   22.0
+   5.0
